@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,8 +37,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(MainActivity.this, AddExpense.class);
+                startActivity(i);
             }
         });
 
@@ -58,10 +60,24 @@ public class MainActivity extends AppCompatActivity
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        Expense[] myDataset = new Expense[] {new Expense("Leclerc", 3.0), new Expense("Essence", 60.0)};
+        final Compte cpt = new Compte();
+        cpt.add(new Expense("Leclerc", "Mes courses", 3.0, true));
+        cpt.add(new Expense("Essence", "Mon Plein" ,60.0, true));
+        cpt.add(new Expense("Paye", "Mon boss", 660, false));
         // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(myDataset);
+        mAdapter = new MyAdapter(cpt);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        //Snackbar.make(view, myDataset[position].getNom(), Snackbar.LENGTH_SHORT)
+                        //        .setAction("Action", null).show();
+                        Intent i = new Intent(MainActivity.this, AddExpense.class);
+                        i.putExtra("obj", cpt.get(position));
+                        startActivity(i);
+                    }
+                })
+        );
 
     }
 

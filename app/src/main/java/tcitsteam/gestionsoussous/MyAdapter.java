@@ -1,21 +1,25 @@
 package tcitsteam.gestionsoussous;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 /**
  * Created by tcit on 22/05/16.
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private Expense[] mDataset;
+    private Compte cpt;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         protected TextView nom;
         protected TextView detail;
@@ -26,11 +30,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             detail = (TextView)  v.findViewById(R.id.detail);
             montant = (TextView)  v.findViewById(R.id.montant);
         }
+
+        @Override
+        public void onClick(View v) {
+            Log.d("hého","hello");
+            Toast.makeText(v.getContext(), "Hello", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(Expense[] myDataset) {
-        mDataset = myDataset;
+    public MyAdapter(Compte cpt) {
+        this.cpt = cpt;
     }
 
     // Create new views (invoked by the layout manager)
@@ -51,14 +62,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.nom.setText(mDataset[position].getNom());
-        holder.montant.setText(String.valueOf(mDataset[position].getMontant()));
+        holder.nom.setText(cpt.get(position).getNom());
+        holder.detail.setText(cpt.get(position).getDetail());
+        holder.montant.setText(String.valueOf(cpt.get(position).getMontant()));
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return cpt.size();
+    }
+
+    public Compte getCompte() {
+        return cpt;
     }
 }
