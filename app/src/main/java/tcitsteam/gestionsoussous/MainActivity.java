@@ -18,12 +18,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    ArrayList<Expense> cpt;
+    MaBaseSQLite maBase;
 
 
     @Override
@@ -33,14 +37,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, AddExpense.class);
-                startActivity(i);
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,7 +56,11 @@ public class MainActivity extends AppCompatActivity
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        final Compte cpt = new Compte();
+
+        maBase = new MaBaseSQLite(this);
+        maBase.insertExpense(new Expense("Leclerc", "Mes courses", 3.0, true));
+
+        cpt = new ArrayList<>();
         cpt.add(new Expense("Leclerc", "Mes courses", 3.0, true));
         cpt.add(new Expense("Essence", "Mon Plein" ,60.0, true));
         cpt.add(new Expense("Paye", "Mon boss", 660, false));
@@ -70,15 +70,55 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        //Snackbar.make(view, myDataset[position].getNom(), Snackbar.LENGTH_SHORT)
-                        //        .setAction("Action", null).show();
                         Intent i = new Intent(MainActivity.this, AddExpense.class);
                         i.putExtra("obj", cpt.get(position));
-                        startActivity(i);
+                        i.putExtra("key", position);
+                        startActivityForResult(i, 1);
                     }
                 })
         );
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, AddExpense.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("cpt", cpt);
+                i.putExtras(bundle);
+                startActivityForResult(i,1);
+            }
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+
+            if(resultCode == RESULT_OK){
+                Expense ex = (Expense) data.getExtras().getSerializable("obj");
+                if (data.getExtras().getBoolean("new")) {
+                    Log.d("expense", ex.toString());
+                    cpt.add(ex);
+                } else {
+                    int pos = data.getIntExtra("key",0);
+                    cpt.set(pos,ex);
+                }
+                for (int i = 0;i<cpt.size();i++)
+                    Log.d("TAG", cpt.get(i).toString());
+                mAdapter.notifyDataSetChanged();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Do nothing?
+            }
+        }
     }
 
     @Override

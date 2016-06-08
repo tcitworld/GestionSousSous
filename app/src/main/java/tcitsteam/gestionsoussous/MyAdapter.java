@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by tcit on 22/05/16.
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private Compte cpt;
+    private ArrayList<Expense> cpt;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -40,7 +41,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(Compte cpt) {
+    public MyAdapter(ArrayList<Expense> cpt) {
         this.cpt = cpt;
     }
 
@@ -74,7 +75,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return cpt.size();
     }
 
-    public Compte getCompte() {
+    public ArrayList<Expense> getCompte() {
         return cpt;
     }
 }

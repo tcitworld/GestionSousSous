@@ -32,4 +32,24 @@ public class Expense implements Serializable {
     public boolean getType() {
         return this.type;
     }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setMontant(Float montant) {
+        this.montant = montant;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public void setType(boolean type) {
+        this.type = type;
+    }
+
+    public String toString() {
+        return "Nom : " + this.nom + " Montant : " + this.montant + " Détail : " + this.detail + " est income : " + this.type;
+    }
 }
