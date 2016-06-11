@@ -1,5 +1,6 @@
 package tcitsteam.gestionsoussous;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
  * Created by tcit on 22/05/16.
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private ArrayList<Expense> cpt;
+    private ArrayList<Operation> cpt;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -41,7 +43,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(ArrayList<Expense> cpt) {
+    public MyAdapter(ArrayList<Operation> cpt) {
         this.cpt = cpt;
     }
 
@@ -64,8 +66,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.nom.setText(cpt.get(position).getNom());
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+
         holder.detail.setText(cpt.get(position).getDetail());
-        holder.montant.setText(String.valueOf(cpt.get(position).getMontant()));
+        holder.montant.setText(df.format(cpt.get(position).getMontant()) + "€");
+        if (cpt.get(position).getType()) {
+            holder.montant.setTextColor(Color.GREEN);
+        } else {
+            holder.montant.setTextColor(Color.RED);
+        }
 
     }
 
@@ -75,7 +86,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return cpt.size();
     }
 
-    public ArrayList<Expense> getCompte() {
+    public ArrayList<Operation> getCompte() {
         return cpt;
     }
 }

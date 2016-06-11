@@ -1,20 +1,25 @@
 package tcitsteam.gestionsoussous;
 
-import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Calendar;
 
 
 public class AddExpense extends AppCompatActivity {
@@ -25,10 +30,14 @@ public class AddExpense extends AppCompatActivity {
     RadioButton outcome, income;
     RadioGroup radioGroup;
     Button saveButton;
-    Expense ex;
+    DatePicker mDatePicker;
+
+    Operation ex;
     boolean type;
     boolean nouveau = true;
     int key;
+
+    MaBaseSQLite maBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +58,24 @@ public class AddExpense extends AppCompatActivity {
             }
         });
 
+        mDatePicker = (DatePicker) findViewById(R.id.dpResult);
+
+        Calendar c = Calendar.getInstance();
+
         Intent i = getIntent();
         if (i.getSerializableExtra("obj") != null) {
             nouveau = false;
-            ex = (Expense) i.getSerializableExtra("obj");
+            ex = (Operation) i.getSerializableExtra("obj");
 
             editNom.setText(ex.getNom());
-            editSum.setText(String.valueOf(ex.getMontant()));
+
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+            symbols.setDecimalSeparator('.');
+            DecimalFormat df = new DecimalFormat();
+            df.setDecimalFormatSymbols(symbols);
+            df.setMaximumFractionDigits(2);
+
+            editSum.setText(df.format(ex.getMontant()));
             editDetail.setText(ex.getDetail());
             if (ex.getType()) {
                 income.setChecked(true);
@@ -63,21 +83,37 @@ public class AddExpense extends AppCompatActivity {
                 outcome.setChecked(true);
             }
 
+            c.setTimeInMillis(ex.getDate().getTime());
+
             key = i.getIntExtra("key",0);
         }
+
+        mDatePicker.updateDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+
+        maBase = new MaBaseSQLite(this);
 
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.DAY_OF_MONTH, mDatePicker.getDayOfMonth());
+                cal.set(Calendar.MONTH, mDatePicker.getMonth());
+                cal.set(Calendar.YEAR, mDatePicker.getYear());
                 if (nouveau) {
-                    ex = new Expense(editNom.getText().toString(), editDetail.getText().toString(), Double.parseDouble(editSum.getText().toString()),type);
+                    if ("".equals(editNom.getText().toString()) || "".equals(editSum.getText().toString())) {
+                        Toast.makeText(AddExpense.this, R.string.fillAllFields, Toast.LENGTH_LONG).show();
+                        return;
+                    } else {
+                        ex = new Operation(editNom.getText().toString(), editDetail.getText().toString(), Double.parseDouble(editSum.getText().toString()), type, new Date(cal.getTimeInMillis()));
+                    }
                 } else {
                     ex.setNom(editNom.getText().toString());
                     ex.setMontant(Float.parseFloat(editSum.getText().toString()));
                     ex.setDetail(editDetail.getText().toString());
                     ex.setType(type);
+                    ex.setDate(new Date(cal.getTimeInMillis()));
                     intent.putExtra("key", key);
                 }
                 Log.d("inside", ex.toString());
@@ -109,6 +145,30 @@ public class AddExpense extends AppCompatActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(getBaseContext(),SettingsActivity.class));
             return true;
+        }
+
+        if (id == R.id.delete_expense) {
+            if (!nouveau) {
+                new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(R.string.confirmDeleteTitle)
+                    .setMessage(R.string.confirmDeleteText)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent();
+                            setResult(RESULT_OK, intent);
+                            intent.putExtra("delete", true);
+                            intent.putExtra("key", key);
+                            intent.putExtra("obj",ex);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+            return true;
+            }
         }
 
         if (id == android.R.id.home) {

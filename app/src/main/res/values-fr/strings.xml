@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GestionSousSous</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="navigation_drawer_close">Fermer le tiroir de navigation</string>
+    <string name="operationName">Nom de l\'opération</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="title_activity_add_expense">Ajouter une opération</string>
+    <string name="operationValue">Montant de la dépense</string>
+    <string name="descriptionFaculative">Description (faculative)</string>
+    <string name="operationDetails">Détails de l\'opération</string>
+    <string name="deleteOperation">Supprimer l\'opération</string>
+    <string name="expense">Dépense</string>
+    <string name="income">Entrée d\'argent</string>
+    <string name="navigation_drawer_open">Ouvrir le tiroir de navigation</string>
+    <string name="save">Sauvegarder</string>
+    <string name="fillAllFields">Merci de remplir tous les champs requis</string>
+    <string name="app_desc">Gérez vos opérations financières</string>
+    <string name="confirmDeleteText">Êtes-vous certain de vouloir supprimer cette opération ?</string>
+    <string name="confirmDeleteTitle">Supprimer cette opération ?</string>
+    <string name="no">Non</string>
+    <string name="yes">Oui</string>
+    <string name="operations">Opérations</string>
+    <string name="statistics">Statistiques</string>
+    <string name="upcoming">À venir</string>
+</resources>

@@ -1,20 +1,37 @@
 package tcitsteam.gestionsoussous;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by tcit on 31/05/16.
  */
-public class Expense implements Serializable {
+public class Operation implements Serializable {
+    private Integer id;
     private String nom, detail;
     private double montant;
     private boolean type;
+    private Date d;
 
-    Expense(String nom, String detail, double montant, boolean type) {
+    Operation(Integer id, String nom, String detail, double montant, boolean type, Date d) {
+        this.id = id;
         this.nom = nom;
         this.detail = detail;
         this.montant = montant;
         this.type = type;
+        this.d = d;
+    }
+
+    Operation(String nom, String detail, double montant, boolean type, Date d) {
+        this.nom = nom;
+        this.detail = detail;
+        this.montant = montant;
+        this.type = type;
+        this.d = d;
+    }
+
+    public Integer getId() {
+        return this.id;
     }
 
     public String getNom() {
@@ -33,6 +50,14 @@ public class Expense implements Serializable {
         return this.type;
     }
 
+    public Date getDate() {
+        return this.d;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public void setNom(String nom) {
         this.nom = nom;
     }
@@ -49,7 +74,9 @@ public class Expense implements Serializable {
         this.type = type;
     }
 
+    public void setDate(Date d) { this.d = d; }
+
     public String toString() {
-        return "Nom : " + this.nom + " Montant : " + this.montant + " Détail : " + this.detail + " est income : " + this.type;
+        return "ID : " + this.id + " Nom : " + this.nom + " Montant : " + this.montant + " Détail : " + this.detail + " est income : " + this.type + " à la date " + this.d.toString() + " " + this.d.getTime();
     }
 }

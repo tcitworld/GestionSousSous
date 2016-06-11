@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -11,18 +12,20 @@
                 android:id="@+id/nom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="nom"
+                android:text="@string/operationName"
                 android:gravity="center_vertical"
                 android:textColor="@android:color/black"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:layout_weight="0.5"/>
 
         <TextView
                 android:id="@+id/montant"
-                android:layout_width="154dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="montant"
+                android:text="@string/operationValue"
                 android:gravity="end"
-                android:textSize="35sp"/>
+                android:textSize="35sp"
+                android:layout_weight="0.5"/>
     </LinearLayout>
 
 
@@ -30,7 +33,7 @@
         android:id="@+id/detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="detail"
+        android:text="@string/operationDetails"
         android:gravity="center_vertical"
         android:textSize="15sp"
         android:layout_marginTop="10dp"

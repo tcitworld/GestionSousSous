@@ -3,7 +3,6 @@ package tcitsteam.gestionsoussous;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,9 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    ArrayList<Expense> cpt;
+    ArrayList<Operation> cpt;
     MaBaseSQLite maBase;
 
 
@@ -58,13 +59,14 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         maBase = new MaBaseSQLite(this);
-        maBase.insertExpense(new Expense("Leclerc", "Mes courses", 3.0, true));
 
-        cpt = new ArrayList<>();
-        cpt.add(new Expense("Leclerc", "Mes courses", 3.0, true));
-        cpt.add(new Expense("Essence", "Mon Plein" ,60.0, true));
-        cpt.add(new Expense("Paye", "Mon boss", 660, false));
-        // specify an adapter (see also next example)
+        cpt = maBase.getAllValues();
+        Collections.sort(cpt, new Comparator<Operation>() {
+            public int compare(Operation a, Operation b) {
+                return b.getId() - a.getId();
+            }
+        });
+
         mAdapter = new MyAdapter(cpt);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnItemTouchListener(
@@ -103,16 +105,30 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == 1) {
 
             if(resultCode == RESULT_OK){
-                Expense ex = (Expense) data.getExtras().getSerializable("obj");
-                if (data.getExtras().getBoolean("new")) {
-                    Log.d("expense", ex.toString());
-                    cpt.add(ex);
+
+                Operation ex = (Operation) data.getExtras().getSerializable("obj");
+
+                if (data.getExtras().getBoolean("delete")) {
+                    Log.d("Action","Deleting operation : " + ex);
+                    maBase.deleteExpense(ex);
+                    cpt.remove(data.getIntExtra("key", 0));
+
+
                 } else {
-                    int pos = data.getIntExtra("key",0);
-                    cpt.set(pos,ex);
+
+                    if (data.getExtras().getBoolean("new")) {
+                        Log.d("expense", ex.toString());
+                        ex.setId(((int) maBase.insertExpense(ex)));
+                        cpt.add(0, ex);
+                    } else {
+                        int pos = data.getIntExtra("key", 0);
+                        cpt.set(pos, ex);
+                        maBase.editExpense(ex);
+                    }
+                    for (int i = 0; i < cpt.size(); i++)
+                        Log.d("TAG", cpt.get(i).toString());
                 }
-                for (int i = 0;i<cpt.size();i++)
-                    Log.d("TAG", cpt.get(i).toString());
+
                 mAdapter.notifyDataSetChanged();
             }
             if (resultCode == RESULT_CANCELED) {
@@ -160,11 +176,11 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.operations) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.upcoming) {
+
+        } else if (id == R.id.statistics) {
 
         } else if (id == R.id.nav_share) {
 
