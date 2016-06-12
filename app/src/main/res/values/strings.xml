@@ -8,6 +8,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <string name="title_activity_add_expense">Adding an operation</string>
+    <string name="title_activity_edit_expense">Editing an operation</string>
     <string name="operationName">Operation name</string>
     <string name="operationValue">Operation value</string>
     <string name="descriptionFaculative">Description (faculative)</string>
@@ -26,6 +27,9 @@
     <string name="upcoming">Upcoming events</string>
     <string name="statistics">Statistics</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="changeDate">Change date</string>
+    <string name="title_activity_upcoming">upcoming</string>
+    <string name="balance">Balance</string>
+    <string name="expenses">Expenses</string>
+    <string name="incomes">Incomes</string>
 </resources>

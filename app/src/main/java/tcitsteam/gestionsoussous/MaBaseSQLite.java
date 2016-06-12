@@ -9,7 +9,7 @@ import android.util.Log;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Calendar;
 
 /**
  * Created by bechu on 18/05/16.
@@ -105,9 +105,25 @@ public class MaBaseSQLite extends SQLiteOpenHelper{
         return db.delete(TABLE_PRODUITS, COL_ID_PRODUIT + "=" + ex.getId(), null) > 0;
     }
 
-    private String getDateTime(Operation e) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return dateFormat.format(e.getDate());
+    public ArrayList<Operation> getAllValuesForDate(java.util.Date d) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+        ArrayList<Operation> alr = new ArrayList<>();
+        String[] columns = {COL_ID_PRODUIT, COL_NOM_PRODUIT, COL_PRIX_PRODUIT, COL_DETAIL_PRODUIT, COL_TYPE_PRODUIT, COL_DATE_PRODUIT};
+        Cursor res =  db.query(TABLE_PRODUITS, columns, "date(datetime(" + COL_DATE_PRODUIT + ", 'unixepoch')) = date(datetime(" + (d.getTime() / 1000) + ", 'unixepoch'))", null, null,null,null);
+        res.moveToFirst();
+        try {
+            while (!res.isAfterLast()) {
+                java.util.Date dt = new java.util.Date();
+
+                alr.add(new Operation(res.getInt(0), res.getString(1), res.getString(3), res.getDouble(2), (res.getInt(4) != 0), new Date(res.getLong(5)*1000)));
+                res.moveToNext();
+            }
+        } finally {
+            res.close();
+        }
+        return alr;
     }
+
 }

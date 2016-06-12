@@ -22,7 +22,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         protected TextView nom;
         protected TextView detail;
@@ -32,12 +32,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             nom =  (TextView) v.findViewById(R.id.nom);
             detail = (TextView)  v.findViewById(R.id.detail);
             montant = (TextView)  v.findViewById(R.id.montant);
-        }
-
-        @Override
-        public void onClick(View v) {
-            Log.d("hého","hello");
-            Toast.makeText(v.getContext(), "Hello", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -84,9 +78,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return cpt.size();
-    }
-
-    public ArrayList<Operation> getCompte() {
-        return cpt;
     }
 }

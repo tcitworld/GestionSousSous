@@ -11,7 +11,9 @@
     <string name="operationDetails">Détails de l\'opération</string>
     <string name="deleteOperation">Supprimer l\'opération</string>
     <string name="expense">Dépense</string>
+    <string name="expenses">Dépenses</string>
     <string name="income">Entrée d\'argent</string>
+    <string name="incomes">Entrées d\'argent</string>
     <string name="navigation_drawer_open">Ouvrir le tiroir de navigation</string>
     <string name="save">Sauvegarder</string>
     <string name="fillAllFields">Merci de remplir tous les champs requis</string>
@@ -23,4 +25,8 @@
     <string name="operations">Opérations</string>
     <string name="statistics">Statistiques</string>
     <string name="upcoming">À venir</string>
+    <string name="changeDate">Changer la date</string>
+    <string name="title_activity_upcoming">À venir</string>
+    <string name="balance">Solde</string>
+    <string name="title_activity_edit_expense">Editer une opération</string>
 </resources>

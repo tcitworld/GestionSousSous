@@ -1,6 +1,7 @@
 package tcitsteam.gestionsoussous;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,11 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<Operation> cpt;
     MaBaseSQLite maBase;
+
+    TextView solde, soldeIncome, soldeOutcome;
 
 
     @Override
@@ -67,6 +70,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        this.updateSoldes();
+
         mAdapter = new MyAdapter(cpt);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnItemTouchListener(
@@ -92,6 +97,47 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    private Double getIncomeSum(ArrayList<Operation> op) {
+        double sum = 0;
+        for (Operation o:op)
+            if (o.getType())
+                sum+=o.getMontant();
+        return sum;
+    }
+
+    private Double getExpensesSum(ArrayList<Operation> op) {
+        double sum = 0;
+        for (Operation o:op)
+            if (!o.getType())
+                sum+=o.getMontant();
+        return sum;
+    }
+
+    private Double getOperationsSum(ArrayList<Operation> op) {
+        return this.getIncomeSum(op) - this.getExpensesSum(op);
+    }
+
+    private void updateSoldes() {
+        solde = (TextView) findViewById(R.id.soldeGlobal);
+        int n = 0;
+        if (this.getOperationsSum(cpt) > 200) {
+            n = 0;
+        } else if (this.getOperationsSum(cpt) < -200){
+            n = 100;
+        } else {
+            n = 100-(this.getOperationsSum(cpt).intValue() + 200) / 4;
+        }
+
+        solde.setBackgroundColor(Color.rgb((255 * n) / 100, (255 * (100 - n)) / 100, 0));
+        solde.setText(getString(R.string.balance) + " : " + this.getOperationsSum(cpt));
+
+        soldeIncome = (TextView) findViewById(R.id.soldepos);
+        soldeIncome.setText(getString(R.string.incomes) + ": " + this.getIncomeSum(cpt));
+
+        soldeOutcome = (TextView) findViewById(R.id.soldeNeg);
+        soldeOutcome.setText(getString(R.string.expenses) + " : " + this.getExpensesSum(cpt));
     }
 
     @Override
@@ -128,7 +174,7 @@ public class MainActivity extends AppCompatActivity
                     for (int i = 0; i < cpt.size(); i++)
                         Log.d("TAG", cpt.get(i).toString());
                 }
-
+                this.updateSoldes();
                 mAdapter.notifyDataSetChanged();
             }
             if (resultCode == RESULT_CANCELED) {
@@ -179,9 +225,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.operations) {
 
         } else if (id == R.id.upcoming) {
-
+            startActivity(new Intent(MainActivity.this, upcoming.class));
         } else if (id == R.id.statistics) {
-
+            startActivity(new Intent(MainActivity.this, Statistics.class));
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

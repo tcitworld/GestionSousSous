@@ -13,10 +13,45 @@
     tools:context="tcitsteam.gestionsoussous.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layoutSoldes"
+        android:layout_marginBottom="20sp">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:id="@+id/soldeGlobal"
+            android:textAlignment="center" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/soldepos"
+                android:layout_weight=".5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/soldeNeg"
+                android:layout_weight=".5" />
+        </LinearLayout>
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/layoutSoldes"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     </android.support.v7.widget.RecyclerView>

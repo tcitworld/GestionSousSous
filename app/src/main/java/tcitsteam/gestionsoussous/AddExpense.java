@@ -44,6 +44,8 @@ public class AddExpense extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         editNom = (TextView) findViewById(R.id.editNom);
         editSum = (TextView) findViewById(R.id.editSum);
         editDetail = (TextView) findViewById(R.id.editDetail);
@@ -65,6 +67,9 @@ public class AddExpense extends AppCompatActivity {
         Intent i = getIntent();
         if (i.getSerializableExtra("obj") != null) {
             nouveau = false;
+
+            setTitle(getString(R.string.title_activity_edit_expense));
+
             ex = (Operation) i.getSerializableExtra("obj");
 
             editNom.setText(ex.getNom());
