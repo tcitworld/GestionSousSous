@@ -48,7 +48,7 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view"
+        android:id="@+id/my_recycler_view2"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/layoutSoldes"
